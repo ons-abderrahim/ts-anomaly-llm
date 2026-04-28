@@ -1,0 +1,31 @@
+# ─────────────────────────────────────────────────
+#  ts-anomaly-llm  |  Model Hyperparameters
+# ─────────────────────────────────────────────────
+
+isolation_forest:
+  contamination: 0.05        # expected anomaly fraction in training data
+  n_estimators: 200
+  threshold: 0.5
+  random_state: 42
+
+lstm_ae:
+  window_size: 30
+  hidden_dim: 64
+  num_layers: 2
+  dropout: 0.2
+  epochs: 50
+  lr: 0.001
+  batch_size: 64
+  threshold: 0.5
+
+transformer_ae:
+  window_size: 60
+  d_model: 64
+  nhead: 4
+  num_encoder_layers: 3
+  dim_feedforward: 256
+  dropout: 0.1
+  epochs: 80
+  lr: 0.0005
+  batch_size: 64
+  threshold: 0.5

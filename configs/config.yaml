@@ -1,0 +1,58 @@
+# ─────────────────────────────────────────────────
+#  ts-anomaly-llm  |  Main Configuration
+# ─────────────────────────────────────────────────
+
+# ── API Server ──────────────────────────────────
+api:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 2
+  log_level: "info"
+
+# ── Dashboard ───────────────────────────────────
+dashboard:
+  host: "0.0.0.0"
+  port: 8050
+  debug: false
+  refresh_interval_ms: 5000
+  api_base_url: "http://localhost:8000/api/v1"
+
+# ── LLM / OpenAI ────────────────────────────────
+llm:
+  provider: "openai"                # openai | anthropic | local
+  model: "gpt-4o-mini"
+  temperature: 0.3
+  max_tokens: 512
+  baseline_window: 50               # context points shown in prompts
+
+# ── Anomaly Detection ────────────────────────────
+detection:
+  default_model: "isolation_forest"
+  default_threshold: 0.5
+
+# ── Streaming Ingestion ──────────────────────────
+ingestion:
+  window_size: 100                   # sliding buffer before triggering detection
+
+  kafka:
+    bootstrap_servers: "localhost:9092"
+    topic: "ts-anomaly-raw"
+    group_id: "anomaly-detector"
+    auto_offset_reset: "latest"
+
+  redis:
+    host: "localhost"
+    port: 6379
+    db: 0
+    stream_key: "ts:sensor:raw"
+    consumer_group: "anomaly-detector"
+    consumer_name: "worker-1"
+    block_ms: 2000
+    batch_size: 50
+
+# ── Persistence (InfluxDB) ───────────────────────
+influxdb:
+  url: "http://localhost:8086"
+  org: "anomaly-org"
+  bucket: "anomalies"
+  # token is read from INFLUXDB_TOKEN env var
